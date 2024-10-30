@@ -90,8 +90,7 @@ void initMenu(struct User *u, struct User  user)
         case 2:
             // student TODO : add your **Registration** function
             // here
-            loginMenu(u->name, u->password);
-            
+            registerMenu(u->name, u->password);
             r = 1;
             break;
         case 3:
@@ -108,6 +107,6 @@ int main()
     struct User u;
     
     initMenu(&u, u);
-    mainMenu(u);
+    //mainMenu(u);
     return 0;
 }

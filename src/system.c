@@ -1,4 +1,5 @@
 #include "header.h"
+#include <termios.h>
 
 const char *RECORDS = "./data/records.txt";
 
@@ -164,12 +165,19 @@ void checkAllAccounts(struct User u)
     success(u);
 }
 
+void get_input_str(char *data){
+    char buffer [50];
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strlen(buffer)-1] = '\0';
+    strcpy(data, buffer);}
+
 void registerMenu(char a[50], char pass[50]){
      struct termios oflags, nflags;
 
     system("clear");
-    printf("\n\n\n\t\t\t\t   Bank Management System\n\t\t\t\t\t User Login:");
-    scanf("%s", a);
+    printf("\n\n\n\t\t\t\tBank Management System\n\t\t\t\t   Enter User Name:");
+    get_input_str(a);
+    // scanf("%s", a);
 
     // disabling echo
     tcgetattr(fileno(stdin), &oflags);
@@ -182,8 +190,9 @@ void registerMenu(char a[50], char pass[50]){
         perror("tcsetattr");
         return exit(1);
     }
-    printf("\n\n\n\n\n\t\t\t\tEnter the password to login:");
-    scanf("%s", pass);
+    printf("\n\n\n\n\n\t\t\t\tEnter Password:");
+    get_input_str(pass);
+    //scanf("%s", pass);
 
     // restore terminal
     if (tcsetattr(fileno(stdin), TCSANOW, &oflags) != 0)
@@ -191,4 +200,28 @@ void registerMenu(char a[50], char pass[50]){
         perror("tcsetattr");
         return exit(1);
     }
+
+    FILE *fp = fopen("./data/users.txt", "r");
+    char line[256];
+    int id = 0;
+    struct User u;
+    
+    if(fp != NULL){
+        while(fgets(line, sizeof(line), fp) != NULL){
+            id++;
+        }
+        fclose(fp);
+    }else{
+        printf("Error! opening file");
+        exit(1);
+    }
+
+    fp = fopen("./data/users.txt", "a");
+    u.id = id;
+    strcpy(u.name, a);
+    strcpy(u.password, pass);
+    fprintf(fp, "%d %s %s\n", u.id, u.name, u.password);
+    fclose(fp);
+    printf("\n\nUser registered successfully!\n");
+    printf("u.password = %s\n", u.name);
 }
