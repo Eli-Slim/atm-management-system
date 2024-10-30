@@ -13,11 +13,11 @@ struct Record
     int id;
     int userId;
     char name[100];
+    int accountNbr;
     char country[100];
     int phone;
-    char accountType[10];
-    int accountNbr;
     double amount;
+    char accountType[10];
     struct Date deposit;
     struct Date withdraw;
 };
@@ -38,3 +38,4 @@ const char *getPassword(struct User u);
 void createNewAcc(struct User u);
 void mainMenu(struct User u);
 void checkAllAccounts(struct User u);
+void get_input_str(char *data);

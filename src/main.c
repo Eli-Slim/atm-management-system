@@ -58,7 +58,7 @@ void get_input(int *option){
     *option = atoi(buffer);
 }
 
-void initMenu(struct User *u, struct User  user)
+void initMenu(struct User *u)
 {
     int r = 0;
     int option;
@@ -76,13 +76,14 @@ void initMenu(struct User *u, struct User  user)
         {
       case 1:
             loginMenu(u->name, u->password);
+
             if (strcmp(u->password, getPassword(*u)) == 0)
             {
                 printf("\n\nPassword Match!");
             }
             else
             {
-                printf("\nWrong password!! or User Name\n");
+                printf("\nWrong password!! or ;User Name\n");
                 exit(1);
             }
             r = 1;
@@ -106,7 +107,7 @@ int main()
 {
     struct User u;
     
-    initMenu(&u, u);
-    //mainMenu(u);
+    initMenu(&u);
+    mainMenu(u);
     return 0;
 }

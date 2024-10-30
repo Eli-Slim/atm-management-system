@@ -7,8 +7,8 @@ int getAccountFromFile(FILE *ptr, char name[50], struct Record *r)
 {
     return fscanf(ptr, "%d %d %s %d %d/%d/%d %s %d %lf %s",
                   &r->id,
-		  &r->userId,
-		  name,
+		          &r->userId,
+		          name,
                   &r->accountNbr,
                   &r->deposit.month,
                   &r->deposit.day,
@@ -114,7 +114,8 @@ noAccount:
     scanf("%d", &r.accountNbr);
 
     while (getAccountFromFile(pf, userName, &cr))
-    {
+    {   
+        printf("%s\n", userName);
         if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr)
         {
             printf("✖ This Account already exists for this user\n\n");
@@ -169,7 +170,8 @@ void get_input_str(char *data){
     char buffer [50];
     fgets(buffer, sizeof(buffer), stdin);
     buffer[strlen(buffer)-1] = '\0';
-    strcpy(data, buffer);}
+    strcpy(data, buffer);
+}
 
 void registerMenu(char a[50], char pass[50]){
      struct termios oflags, nflags;
