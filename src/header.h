@@ -1,6 +1,18 @@
+#ifndef HEADER_H
+#define HEADER_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <ctype.h>
+
+#include <unistd.h>
+#include <stdbool.h>
+#include <termios.h>
+
+// char *USERS = "./data/users.txt";
+// const char *RECORDS = "./data/records.txt";
 
 struct Date
 {
@@ -32,10 +44,13 @@ struct User
 // authentication functions
 void loginMenu(char a[50], char pass[50]);
 void registerMenu(char a[50], char pass[50]);
-const char *getPassword(struct User u);
+const char *getPassword(struct User *u);
 
 // system function
 void createNewAcc(struct User u);
 void mainMenu(struct User u);
 void checkAllAccounts(struct User u);
 void get_input_str(char *data);
+void get_input(int *option);
+
+#endif

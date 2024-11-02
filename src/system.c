@@ -1,5 +1,4 @@
 #include "header.h"
-#include <termios.h>
 
 const char *RECORDS = "./data/records.txt";
 
@@ -23,8 +22,8 @@ void saveAccountToFile(FILE *ptr, struct User u, struct Record r)
 {
     fprintf(ptr, "%d %d %s %d %d/%d/%d %s %d %.2lf %s\n\n",
             r.id,
-	    u.id,
-	    u.name,
+	        u.id,
+	        u.name,
             r.accountNbr,
             r.deposit.month,
             r.deposit.day,
@@ -102,25 +101,39 @@ void createNewAcc(struct User u)
     struct Record r;
     struct Record cr;
     char userName[50];
+    bool found = false;
+    bool records = false;
     FILE *pf = fopen(RECORDS, "a+");
 
 noAccount:
     system("clear");
     printf("\t\t\t===== New record =====\n");
-
     printf("\nEnter today's date(mm/dd/yyyy):");
     scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
     printf("\nEnter the account number:");
+    // get_input(&r.accountNbr);
     scanf("%d", &r.accountNbr);
 
     while (getAccountFromFile(pf, userName, &cr))
     {   
-        printf("%s\n", userName);
+        if(!records){
+            records = true;
+        }
+        if(strcmp(userName, u.name) == 0 && !found){
+            found = true;
+            u.id = cr.userId;
+        }else if(!found && u.id < cr.userId){
+            u.id = cr.userId;
+        }
         if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr)
         {
             printf("✖ This Account already exists for this user\n\n");
             goto noAccount;
         }
+    }
+    if(!records){
+        u.id = 0;
+        r.id = 0;
     }
     printf("\nEnter the country:");
     scanf("%s", r.country);
@@ -130,7 +143,12 @@ noAccount:
     scanf("%lf", &r.amount);
     printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> fixed01(for 1 year)\n\t-> fixed02(for 2 years)\n\t-> fixed03(for 3 years)\n\n\tEnter your choice:");
     scanf("%s", r.accountType);
-
+    if(!found){
+        u.id++;
+    }
+    if(records){
+        r.id = cr.id + 1;
+    }
     saveAccountToFile(pf, u, r);
 
     fclose(pf);
@@ -166,15 +184,8 @@ void checkAllAccounts(struct User u)
     success(u);
 }
 
-void get_input_str(char *data){
-    char buffer [50];
-    fgets(buffer, sizeof(buffer), stdin);
-    buffer[strlen(buffer)-1] = '\0';
-    strcpy(data, buffer);
-}
-
 void registerMenu(char a[50], char pass[50]){
-     struct termios oflags, nflags;
+    struct termios oflags, nflags;
 
     system("clear");
     printf("\n\n\n\t\t\t\tBank Management System\n\t\t\t\t   Enter User Name:");
@@ -224,6 +235,5 @@ void registerMenu(char a[50], char pass[50]){
     strcpy(u.password, pass);
     fprintf(fp, "%d %s %s\n", u.id, u.name, u.password);
     fclose(fp);
-    printf("\n\nUser registered successfully!\n");
-    printf("u.password = %s\n", u.name);
+    success(u);
 }

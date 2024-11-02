@@ -52,12 +52,6 @@ void mainMenu(struct User u)
     }
 };
 
-void get_input(int *option){
-    char buffer [50];
-    fgets(buffer, sizeof(buffer), stdin);
-    *option = atoi(buffer);
-}
-
 void initMenu(struct User *u)
 {
     int r = 0;
@@ -77,7 +71,7 @@ void initMenu(struct User *u)
       case 1:
             loginMenu(u->name, u->password);
 
-            if (strcmp(u->password, getPassword(*u)) == 0)
+            if (strcmp(u->password, getPassword(u)) == 0)
             {
                 printf("\n\nPassword Match!");
             }
