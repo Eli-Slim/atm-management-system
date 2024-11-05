@@ -111,19 +111,12 @@ noAccount:
     printf("\nEnter today's date(mm/dd/yyyy):");
     scanf("%d/%d/%d", &r.deposit.month, &r.deposit.day, &r.deposit.year);
     printf("\nEnter the account number:");
-    // get_input(&r.accountNbr);
-    scanf("%d", &r.accountNbr);
-
+    get_input_int(&r.accountNbr);
+    
     while (getAccountFromFile(pf, userName, &cr))
     {   
         if(!records){
             records = true;
-        }
-        if(strcmp(userName, u.name) == 0 && !found){
-            found = true;
-            u.id = cr.userId;
-        }else if(!found && u.id < cr.userId){
-            u.id = cr.userId;
         }
         if (strcmp(userName, u.name) == 0 && cr.accountNbr == r.accountNbr)
         {
@@ -131,10 +124,7 @@ noAccount:
             goto noAccount;
         }
     }
-    if(!records){
-        u.id = 0;
-        r.id = 0;
-    }
+
     printf("\nEnter the country:");
     scanf("%s", r.country);
     printf("\nEnter the phone number:");
@@ -143,11 +133,10 @@ noAccount:
     scanf("%lf", &r.amount);
     printf("\nChoose the type of account:\n\t-> saving\n\t-> current\n\t-> fixed01(for 1 year)\n\t-> fixed02(for 2 years)\n\t-> fixed03(for 3 years)\n\n\tEnter your choice:");
     scanf("%s", r.accountType);
-    if(!found){
-        u.id++;
-    }
     if(records){
         r.id = cr.id + 1;
+    }else if(!records){
+        r.id = 0;
     }
     saveAccountToFile(pf, u, r);
 
@@ -186,7 +175,7 @@ void checkAllAccounts(struct User u)
 
 void registerMenu(char a[50], char pass[50]){
     struct termios oflags, nflags;
-
+noUser:
     system("clear");
     printf("\n\n\n\t\t\t\tBank Management System\n\t\t\t\t   Enter User Name:");
     get_input_str(a);
@@ -214,26 +203,20 @@ void registerMenu(char a[50], char pass[50]){
         return exit(1);
     }
 
-    FILE *fp = fopen("./data/users.txt", "r");
-    char line[256];
-    int id = 0;
-    struct User u;
-    
-    if(fp != NULL){
-        while(fgets(line, sizeof(line), fp) != NULL){
-            id++;
-        }
-        fclose(fp);
-    }else{
-        printf("Error! opening file");
-        exit(1);
-    }
+    FILE *fp = fopen("./data/users.txt", "a+");
 
-    fp = fopen("./data/users.txt", "a");
-    u.id = id;
-    strcpy(u.name, a);
-    strcpy(u.password, pass);
-    fprintf(fp, "%d %s %s\n", u.id, u.name, u.password);
+    struct User u;
+
+    while (getUserFromFile(fp, u.name, &u))
+    {
+        if (strcmp(u.name, a) == 0)
+        {
+            printf("\n✖ This user already exists\n");
+            goto noUser;
+        }
+    }
+    u.id++;
+    fprintf(fp, "%d %s %s\n", u.id, a, pass);
     fclose(fp);
     success(u);
 }

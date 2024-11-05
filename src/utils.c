@@ -1,16 +1,45 @@
 #include "header.h"
 
 void get_input_str(char *data){
-    char buffer [50];
-    fgets(buffer, sizeof(buffer), stdin);
-    buffer[strlen(buffer)-1] = '\0';
-    strcpy(data, buffer);
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while(1){
+        read = getline(&line, &len, stdin);
+        if(read == -1){
+            continue;
+        }
+        if(line[read-1] == '\n'){
+            line[read-1] = '\0';
+        }
+        if (sscanf(line, "%s", data) > 0){
+            break;
+        }
+    }
+    free(line);
 }
 
-void get_input(int *option){
-    char buffer [50];
-    fgets(buffer, sizeof(buffer), stdin);
-    *option = atoi(buffer);
+void get_input_int(int *option){
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while(1){
+        read = getline(&line, &len, stdin);
+        if(read == -1){
+            continue;
+        }
+        if(line[read-1] == '\n'){
+            line[read-1] = '\0';
+        }
+        if (sscanf(line, "%d", option) > 0){
+            break;
+        }
+    }
+    free(line);
+}
+
+int getUserFromFile(FILE *ptr, char name[50], struct User *u){
+    return fscanf(ptr, "%d %s %s", &u->id, name, u->password) != EOF;
 }
 // int main()
 // {

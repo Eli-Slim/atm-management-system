@@ -51,6 +51,7 @@ void createNewAcc(struct User u);
 void mainMenu(struct User u);
 void checkAllAccounts(struct User u);
 void get_input_str(char *data);
-void get_input(int *option);
+void get_input_int(int *option);
+int getUserFromFile(FILE *ptr, char name[50], struct User *u);
 
 #endif

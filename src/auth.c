@@ -48,6 +48,7 @@ const char *getPassword(struct User *u)
     {
         if (strcmp(userChecker.name, u->name) == 0)
         {   
+            u->id = userChecker.id;
             fclose(fp);
             char *buff = userChecker.password;
             return buff;
