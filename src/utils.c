@@ -38,6 +38,8 @@ void get_input_int(int *option){
     free(line);
 }
 
+
+
 int getUserFromFile(FILE *ptr, char name[50], struct User *u){
     return fscanf(ptr, "%d %s %s", &u->id, name, u->password) != EOF;
 }
